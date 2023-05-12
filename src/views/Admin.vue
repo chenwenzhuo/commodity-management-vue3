@@ -11,7 +11,7 @@
                 <el-main>
                     <router-view/>
                 </el-main>
-                <el-footer>Footer</el-footer>
+                <el-footer>推荐使用谷歌浏览器，可获得更佳浏览体验</el-footer>
             </el-container>
         </el-container>
     </div>
@@ -28,7 +28,7 @@ import Header from "@/components/Header.vue";
 
   .el-container {
     height: 100%;
-    background-color: #9a9494;
+    background-color: #e8e8e8;
 
     .el-aside {
       background-color: #545c64;
@@ -40,8 +40,17 @@ import Header from "@/components/Header.vue";
         padding: 0;
       }
 
+      .el-main {
+        margin: 24px;
+        background-color: #ffffff;
+      }
+
       .el-footer {
-        background-color: #add6ea;
+        color: #939393;
+        background-color: #cecece;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
       }
     }
   }
