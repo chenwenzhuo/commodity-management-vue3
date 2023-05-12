@@ -31,7 +31,7 @@ import Header from "@/components/Header.vue";
     background-color: #e8e8e8;
 
     .el-aside {
-      background-color: #545c64;
+      background-color: #081524;
     }
 
     .el-container {

@@ -5,7 +5,7 @@
     </div>
     <el-menu
             active-text-color="#ffd04b"
-            background-color="#545c64"
+            background-color="#081524"
             text-color="#ffffff"
             default-active="1"
             @select="onSelectMenu"
@@ -90,7 +90,7 @@ function onSelectMenu(index: string): void {
 <style scoped lang="less">
 .aside-nav-header {
   height: 80px;
-  background-color: #545c64;
+  background-color: #081524;
   display: flex;
   justify-content: center;
   align-items: center;
