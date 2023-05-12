@@ -10,8 +10,7 @@ interface User {
     role_id: String,
 }
 
-export const useCurrentUserStore
-    = defineStore('curUser', () => {
+export const useCurrentUserStore = defineStore('curUser', () => {
     let curUser: User = reactive({
         _id: '',
         username: '',
