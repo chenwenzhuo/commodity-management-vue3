@@ -10,6 +10,6 @@ export function timeFormatter(milliseconds: number | undefined): string {
     const minute = date.getMinutes();//分钟
     const second = date.getSeconds();//秒
 
-    return `${year}/${month < 10 ? '0' : ''}${month}/${day < 10 ? '0' : ''} ` +
+    return `${year}/${month < 10 ? '0' : ''}${month}/${day < 10 ? '0' : ''}${day} ` +
         `${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
 }
