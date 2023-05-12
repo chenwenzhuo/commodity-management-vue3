@@ -34,7 +34,14 @@ const router = createRouter({
                 } else {
                     next();
                 }
-            }
+            },
+            children: [
+                {path: '/home', component: () => import('../views/Home.vue')},
+                {path: '/category', component: () => import('../views/Category.vue')},
+                {path: '/product', component: () => import('../views/product/Product.vue')},
+                {path: '/role', component: () => import('../views/Role.vue')},
+                {path: '/user', component: () => import('../views/User.vue')},
+            ]
         },
     ]
 })

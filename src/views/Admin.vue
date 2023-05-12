@@ -1,10 +1,14 @@
 <template>
     <div class="outer-wrapper">
         <el-container>
-            <el-aside width="200px">Aside</el-aside>
+            <el-aside>
+                <AsideNav/>
+            </el-aside>
             <el-container>
                 <el-header>Header</el-header>
-                <el-main>Main</el-main>
+                <el-main>
+                    <router-view/>
+                </el-main>
                 <el-footer>Footer</el-footer>
             </el-container>
         </el-container>
@@ -12,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-
+import AsideNav from "@/components/AsideNav.vue";
 </script>
 
 <style scoped lang="less">
@@ -24,7 +28,7 @@
     background-color: #9a9494;
 
     .el-aside {
-      background-color: #dedcdc;
+      background-color: #545c64;
     }
 
     .el-container {
