@@ -5,7 +5,9 @@
                 <AsideNav/>
             </el-aside>
             <el-container>
-                <el-header>Header</el-header>
+                <el-header>
+                    <Header/>
+                </el-header>
                 <el-main>
                     <router-view/>
                 </el-main>
@@ -17,6 +19,7 @@
 
 <script setup lang="ts">
 import AsideNav from "@/components/AsideNav.vue";
+import Header from "@/components/Header.vue";
 </script>
 
 <style scoped lang="less">
@@ -34,7 +37,7 @@ import AsideNav from "@/components/AsideNav.vue";
     .el-container {
       .el-header {
         height: 80px;
-        background-color: #add6ea;
+        padding: 0;
       }
 
       .el-footer {
