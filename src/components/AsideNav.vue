@@ -107,4 +107,8 @@ function onSelectMenu(index: string): void {
     color: #ffffff;
   }
 }
+
+.el-menu {
+  padding: 20px 15px;
+}
 </style>
