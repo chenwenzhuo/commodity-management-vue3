@@ -1,6 +1,6 @@
 <template>
     <div class="aside-nav-header">
-        <img src="../assets/imgs/sys-logo.png" alt=""/>
+        <img src="../assets/imgs/mall-logo.png" alt=""/>
         <span>商品管理系统</span>
     </div>
     <el-menu

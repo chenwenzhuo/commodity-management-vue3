@@ -1,7 +1,7 @@
 <template>
     <div class="login-root">
         <div class="login-header">
-            <img src="../assets/imgs/sys-logo.png" alt=""/>
+            <img src="../assets/imgs/mall-logo.png" alt=""/>
             <h1>商品管理系统</h1>
         </div>
         <div class="login-body">
