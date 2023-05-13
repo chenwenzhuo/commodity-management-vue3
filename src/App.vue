@@ -3,9 +3,7 @@ import {RouterView} from 'vue-router'
 </script>
 
 <template>
-    <div id="root">
-        <RouterView/>
-    </div>
+    <RouterView/>
 </template>
 
 <style>
@@ -15,7 +13,7 @@ html, body {
     height: 100%;
 }
 
-#root, #app {
+#app {
     width: 100%;
     height: 100%;
 }
