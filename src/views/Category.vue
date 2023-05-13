@@ -236,6 +236,7 @@ function handleBackToMainList() {
 
 function onDialogClose() {
     dialogDisplayStatus.value = 0;//隐藏对话框
+    //清除表单绑定的数据对象即可清空表单
     categoryFormData = {
         parentId: '',
         categoryName: ''
