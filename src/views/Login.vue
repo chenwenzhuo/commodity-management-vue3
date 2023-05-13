@@ -17,7 +17,7 @@
                     <el-input v-model="loginFormData.password" type="password" autocomplete="off"/>
                 </el-form-item>
                 <el-form-item>
-                    <el-button style="width: 100%" type="primary"
+                    <el-button style="width: 100%" type="primary" native-type="submit"
                                @click="submitLogin(loginForm)">
                         登陆
                     </el-button>
