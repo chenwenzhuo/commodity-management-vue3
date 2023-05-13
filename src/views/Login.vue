@@ -113,8 +113,18 @@ function submitLogin(form: FormInstance): void {
       width: 500px;
       height: 360px;
       background-color: #ffffff;
-      padding: 100px 50px 0 45px;
+      padding: 80px 50px 0 45px;
       box-sizing: border-box;
+
+      .el-form-item {
+        .el-input, .el-button {
+          height: 40px;
+        }
+      }
+
+      .el-form-item:not(:last-child) {
+        margin-bottom: 40px;
+      }
     }
   }
 }
