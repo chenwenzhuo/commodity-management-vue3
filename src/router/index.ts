@@ -59,7 +59,12 @@ const router = createRouter({
                         const curMenuStore = useCurMenuStore();
                         curMenuStore.setCurMenuName('商品管理');
                         next();
-                    }
+                    },
+                    children: [
+                        {path: '', component: () => import('../views/product/ProductHome.vue')},
+                        {path: '/detail', component: () => import('../views/product/ProductDetail.vue')},
+                        {path: '/manage', component: () => import('../views/product/ProductManage.vue')},
+                    ]
                 },
                 {
                     path: '/role', component: () => import('../views/Role.vue'),
