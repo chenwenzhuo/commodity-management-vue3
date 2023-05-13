@@ -82,7 +82,7 @@ const router = createRouter({
                         next();
                     }
                 },
-                {path: '', redirect: '/home'},//重定向到首页
+                {path: '', name: 'redirect-home', redirect: '/home'},//重定向到首页
             ]
         },
     ]
