@@ -7,6 +7,7 @@ interface ProductDetail {
     pCategoryId: string,
     name: string,
     desc: string,
+    price: number | undefined,
     detail: string,
     imgs: string[]
 }
@@ -18,6 +19,7 @@ export const useSelectedProductStore = defineStore('selectedProduct', () => {
         pCategoryId: '',
         name: '',
         desc: '',
+        price: undefined,
         detail: '',
         imgs: []
     });
