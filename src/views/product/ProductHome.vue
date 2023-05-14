@@ -40,7 +40,10 @@
             </el-table-column>
             <el-table-column label="操作" align="center" min-width="150">
                 <template #default="scope">
-                    <el-button type="primary" class="table-op-btn">详情</el-button>
+                    <el-button type="primary" class="table-op-btn"
+                               @click="handleViewProductDetail(scope.row)">
+                        详情
+                    </el-button>
                     <el-button type="primary" class="table-op-btn">修改</el-button>
                     <el-button type="primary" class="table-op-btn"
                                @click="handleUpdateProductStatus(scope.row)">
@@ -68,6 +71,8 @@ import {ElMessage} from "element-plus";
 import {Plus, Search} from "@element-plus/icons-vue";
 
 import ajaxMtd from "@/utils/ajax";
+import {useSelectedProductStore} from "@/stores/SelectedProduct";
+import router from "@/router";
 
 const searchMethod = ref<string>('productName');//搜索方式，默认值为按名称搜索
 const searchKeyword = ref<string>('');//搜索关键词
@@ -107,6 +112,23 @@ async function handleSearchProduct() {
     productTableData.length = 0;//清空商品数组
     productTableData.push(...response.data.list);//更新表格数据
     totalProducts.value = response.data.total;//更新商品总数
+}
+
+function handleViewProductDetail(row) {
+    //将当前商品的数据存入pinia
+    const selectedProductStore = useSelectedProductStore();
+    selectedProductStore.$patch({
+        targetProduct: {
+            _id: row._id,
+            categoryId: row.categoryId,
+            pCategoryId: row.pCategoryId,
+            name: row.name,
+            desc: row.desc,
+            detail: row.detail,
+            imgs: row.imgs,
+        }
+    });
+    router.push('/product/detail');//跳转到详情界面
 }
 
 async function handleUpdateProductStatus(row) {
