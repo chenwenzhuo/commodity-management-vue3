@@ -16,7 +16,8 @@
                         <span>搜索</span>
                     </el-button>
                 </div>
-                <el-button type="primary">
+                <!--handleAddModifyProduct中根据参数确定添加/修改商品，若不传undefined，框架默认传入事件对象，无法与数据对象row区分-->
+                <el-button type="primary" @click="handleAddModifyProduct(undefined)">
                     <el-icon>
                         <Plus/>
                     </el-icon>
@@ -44,7 +45,10 @@
                                @click="handleViewProductDetail(scope.row)">
                         详情
                     </el-button>
-                    <el-button type="primary" class="table-op-btn">修改</el-button>
+                    <el-button type="primary" class="table-op-btn"
+                               @click="handleAddModifyProduct(scope.row)">
+                        修改
+                    </el-button>
                     <el-button type="primary" class="table-op-btn"
                                @click="handleUpdateProductStatus(scope.row)">
                         {{ scope.row.status === 1 ? '下架' : '上架' }}
@@ -74,6 +78,7 @@ import ajaxMtd from "@/utils/ajax";
 import {useSelectedProductStore} from "@/stores/SelectedProduct";
 import router from "@/router";
 
+const selectedProductStore = useSelectedProductStore();
 const searchMethod = ref<string>('productName');//搜索方式，默认值为按名称搜索
 const searchKeyword = ref<string>('');//搜索关键词
 const productTableData = reactive([]);//产品表格数据
@@ -116,7 +121,6 @@ async function handleSearchProduct() {
 
 function handleViewProductDetail(row) {
     //将当前商品的数据存入pinia
-    const selectedProductStore = useSelectedProductStore();
     selectedProductStore.$patch({
         targetProduct: {
             _id: row._id,
@@ -129,6 +133,24 @@ function handleViewProductDetail(row) {
         }
     });
     router.push('/product/detail');//跳转到详情界面
+}
+
+function handleAddModifyProduct(row) {
+    if (row) {//row为有效值，则当前为更新，将当前商品的数据存入pinia
+        selectedProductStore.$patch({
+            targetProduct: {
+                _id: row._id,
+                categoryId: row.categoryId,
+                pCategoryId: row.pCategoryId,
+                name: row.name,
+                desc: row.desc,
+                price: row.price,
+                detail: row.detail,
+                imgs: row.imgs,
+            }
+        });
+    }
+    router.push('/product/manage');//跳转到详情界面
 }
 
 async function handleUpdateProductStatus(row) {
