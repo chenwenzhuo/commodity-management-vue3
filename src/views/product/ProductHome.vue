@@ -35,14 +35,15 @@
             </el-table-column>
             <el-table-column label="状态" align="center" min-width="100">
                 <template #default="scope">
-                    {{ scope.row.status === 1 ? '在售' : (scope.row.status === 2 ? '已下架' : '状态异常') }}
+                    {{ scope.row.status === 1 ? '在售' : (scope.row.status === 0 ? '已下架' : '状态异常') }}
                 </template>
             </el-table-column>
             <el-table-column label="操作" align="center" min-width="150">
                 <template #default="scope">
                     <el-button type="primary" class="table-op-btn">详情</el-button>
                     <el-button type="primary" class="table-op-btn">修改</el-button>
-                    <el-button type="primary" class="table-op-btn">
+                    <el-button type="primary" class="table-op-btn"
+                               @click="handleUpdateProductStatus(scope.row)">
                         {{ scope.row.status === 1 ? '下架' : '上架' }}
                     </el-button>
                 </template>
@@ -86,7 +87,6 @@ async function reqProductData() {//查询商品数据
         return;
     }
     ElMessage.success('查询商品数据成功');
-    console.log('----------product data', response.data);
     productTableData.push(...response.data.list);//更新表格数据
     totalProducts.value = response.data.total;//更新商品总数
 }
@@ -104,10 +104,22 @@ async function handleSearchProduct() {
         return;
     }
     ElMessage.success('搜索产品成功');
-    console.log('----------product data search', response.data);
     productTableData.length = 0;//清空商品数组
     productTableData.push(...response.data.list);//更新表格数据
     totalProducts.value = response.data.total;//更新商品总数
+}
+
+async function handleUpdateProductStatus(row) {
+    const response: any = await ajaxMtd('/manage/product/updateStatus', {
+        productId: row._id,
+        status: (row.status === 0 ? 1 : 0)
+    }, 'POST');
+    if (response.status !== 0) {
+        ElMessage.error(response.msg);
+        return;
+    }
+    ElMessage.success(`${row.status === 0 ? '上架' : '下架'}成功`);
+    reqProductData();//重新请求数据
 }
 
 onMounted(() => {
