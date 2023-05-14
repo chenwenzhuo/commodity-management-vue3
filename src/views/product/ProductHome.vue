@@ -9,7 +9,7 @@
                         <el-option value="productDesc" label="按描述搜索">按描述搜索</el-option>
                     </el-select>
                     <el-input type="text" v-model="searchKeyword" placeholder="请输入关键词" autocomplete="off"/>
-                    <el-button type="primary">
+                    <el-button type="primary" @click="handleSearchProduct">
                         <el-icon>
                             <Search/>
                         </el-icon>
@@ -26,7 +26,7 @@
         </template>
         <!--主体部分，展示商品信息-->
         <!--为每一个el-table-column设置min-width属性，属性值会作为比例，分配剩余宽度-->
-        <el-table :data="productTableData" style="width: 100%" border>
+        <el-table :data="productTableData" style="width: 100%" border :header-cell-style="{ 'text-align': 'center' }">
             <el-table-column prop="name" label="商品名称" min-width="200"/>
             <el-table-column prop="desc" label="商品描述" min-width="600"/>
             <!--“价格”、“状态”列需要对数据进行格式化后再展示-->
@@ -91,6 +91,25 @@ async function reqProductData() {//查询商品数据
     totalProducts.value = response.data.total;//更新商品总数
 }
 
+async function handleSearchProduct() {
+    const response: any = await ajaxMtd('/manage/product/search', {
+        pageNum: tablePageNum.value,
+        pageSize: tablePageSize.value,
+        searchType: searchMethod.value,
+        productName: searchKeyword.value,
+        productDesc: searchKeyword.value,
+    });
+    if (response.status !== 0) {
+        ElMessage.error(response.msg);
+        return;
+    }
+    ElMessage.success('搜索产品成功');
+    console.log('----------product data search', response.data);
+    productTableData.length = 0;//清空商品数组
+    productTableData.push(...response.data.list);//更新表格数据
+    totalProducts.value = response.data.total;//更新商品总数
+}
+
 onMounted(() => {
     reqProductData();//组件挂载时查询商品数据
 });
@@ -139,8 +158,8 @@ onMounted(() => {
   }
 
   //修改el-pagination背景色
-  :deep(.el-pagination.is-background .el-pager li:not(.is-disabled).is-active) {
-    background-color: #1DA57A;
+  .el-pagination {
+    --el-color-primary: #1DA57A;
   }
 }
 </style>
