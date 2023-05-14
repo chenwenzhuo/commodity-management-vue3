@@ -62,8 +62,8 @@ const router = createRouter({
                     },
                     children: [
                         {path: '', component: () => import('../views/product/ProductHome.vue')},
-                        {path: '/detail', component: () => import('../views/product/ProductDetail.vue')},
-                        {path: '/manage', component: () => import('../views/product/ProductManage.vue')},
+                        {path: 'detail', component: () => import('../views/product/ProductDetail.vue')},
+                        {path: 'manage', component: () => import('../views/product/ProductManage.vue')},
                     ]
                 },
                 {
