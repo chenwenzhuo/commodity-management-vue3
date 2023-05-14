@@ -89,6 +89,17 @@ function handlePreviewClose() {
 }
 
 function handleBackToHome() {
+    selectedProductStore.$patch({//清空pinia中数据
+        targetProduct: {
+            _id: '',
+            categoryId: '',
+            pCategoryId: '',
+            name: '',
+            desc: '',
+            detail: '',
+            imgs: [],
+        }
+    });
     router.go(-1);//返回主页
 }
 
