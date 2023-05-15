@@ -122,7 +122,7 @@ onMounted(() => {
       margin: 0;
       padding: 0;
       border: 0;
-      color: #1DA57A;
+      color: #409EFF;
       background-color: #ffffff00;
       font-size: 24px;
     }

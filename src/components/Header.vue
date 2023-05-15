@@ -72,7 +72,7 @@ onBeforeUnmount(() => {//组件卸载前关闭定时器
   .header-upper {
     height: 50%;
     box-sizing: border-box;
-    border-bottom: 1px solid #1DA57A;
+    border-bottom: 1px solid #409EFF;
     display: flex;
     justify-content: flex-end;
     align-items: center;

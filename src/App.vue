@@ -23,7 +23,7 @@ html, body {
     padding: 0;
     border: 0;
     background-color: rgba(255, 255, 255, 0);
-    color: #1DA57A;
+    color: #409EFF;
     cursor: pointer;
 }
 </style>

@@ -31,16 +31,16 @@
             <el-table-column prop="name" label="商品名称"/>
             <el-table-column label="操作">
                 <template #default="scope">
-                    <el-button link type="primary" style="color: #1DA57A"
+                    <el-button link type="primary" style="color: #409EFF"
                                @click="handleUpdateCate(scope.row)">
                         修改分类名称
                     </el-button>
-                    <el-button link type="primary" style="color: #1DA57A"
+                    <el-button link type="primary" style="color: #409EFF"
                                @click="handleViewSubCate(scope.row)"
                                v-show="parentCateId==='0'"><!--仅当展示一级分类时，显示“查看子分类”按钮-->
                         查看子分类
                     </el-button>
-                    <el-button link type="primary" style="color: #1DA57A"
+                    <el-button link type="primary" style="color: #409EFF"
                                @click="handleDeleteCate(scope.row)">
                         删除分类
                     </el-button>
@@ -264,12 +264,12 @@ onMounted(() => {
     }
 
     .header-category-btn {
-      color: #1DA57A;
+      color: #409EFF;
       font-size: 20px
     }
 
     .add-cate-btn {
-      background-color: #1DA57A;
+      background-color: #409EFF;
       font-size: 16px;
       padding: 18px;
     }
@@ -281,7 +281,7 @@ onMounted(() => {
   padding: 0;
   border: 0;
   background-color: rgba(255, 255, 255, 0);
-  color: #1DA57A;
+  color: #409EFF;
   cursor: pointer;
 }
 </style>

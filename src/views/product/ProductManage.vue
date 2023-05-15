@@ -277,7 +277,7 @@ onMounted(() => {
       padding: 0;
       border: 0;
       font-size: 24px;
-      color: #1DA57A;
+      color: #409EFF;
       background-color: #ffffff00;
     }
 
@@ -288,7 +288,7 @@ onMounted(() => {
 
   .submit-btn {
     font-size: 18px;
-    background-color: #1DA57A;
+    background-color: #409EFF;
     margin-top: 20px;
     padding: 20px;
   }

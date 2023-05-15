@@ -197,7 +197,7 @@ onMounted(() => {
     }
 
     .el-button { //可同时选中搜索和添加商品按钮
-      background-color: #1DA57A;
+      background-color: #409EFF;
     }
   }
 
@@ -205,7 +205,7 @@ onMounted(() => {
     margin: 0;
     padding: 0;
     border: 0;
-    color: #1DA57A;
+    color: #409EFF;
     background-color: #ffffff00;
 
     &:nth-child(2) {
@@ -215,7 +215,7 @@ onMounted(() => {
 
   //修改el-pagination背景色
   .el-pagination {
-    --el-color-primary: #1DA57A;
+    --el-color-primary: #409EFF;
   }
 }
 </style>
