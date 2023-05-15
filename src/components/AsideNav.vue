@@ -46,7 +46,7 @@
             <el-icon :size="30">
                 <UserFilled/>
             </el-icon>
-            <span>用户</span>
+            <span>用户管理</span>
         </el-menu-item>
     </el-menu>
 </template>
