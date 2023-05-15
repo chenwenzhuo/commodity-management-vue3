@@ -13,17 +13,17 @@
         </template>
         <el-form ref="productFormRef" :model="productFormData"
                  :rules="formRules">
-            <el-form-item label="商品名称" prop="name">
+            <el-form-item label="商品名称" prop="name" label-width="80px">
                 <el-col :span="8" style="min-width: 150px; max-width: 400px">
                     <el-input type="text" v-model="productFormData.name" autocomplete="off"/>
                 </el-col>
             </el-form-item>
-            <el-form-item label="商品描述" prop="desc">
+            <el-form-item label="商品描述" prop="desc" label-width="80px">
                 <el-col :span="8" style="min-width: 150px; max-width: 400px">
                     <el-input type="text" v-model="productFormData.desc" autocomplete="off"/>
                 </el-col>
             </el-form-item>
-            <el-form-item label="商品价格" prop="price">
+            <el-form-item label="商品价格" prop="price" label-width="80px">
                 <el-col :span="8" style="min-width: 150px; max-width: 400px">
                     <el-input type="text" v-model="productFormData.price" autocomplete="off">
                         <template #prefix>¥</template>
@@ -31,27 +31,44 @@
                     </el-input>
                 </el-col>
             </el-form-item>
-            <el-form-item label="商品分类" prop="categories">
+            <el-form-item label="商品分类" prop="categories" label-width="80px">
                 <el-col :span="8" style="min-width: 150px; max-width: 400px">
                     <el-cascader :options="cascaderOptions" v-model="productFormData.categories"
-                                 :props="{checkStrictly:true}" clearable
-                                 @change="handleCascaderChange"/>
+                                 :props="{checkStrictly:true}" clearable/>
                 </el-col>
             </el-form-item>
-            <el-form-item label="商品图片">
+            <el-form-item label="商品图片" label-width="80px">
                 <el-col :span="16" style="min-width: 300px; max-width: 800px">
                     <el-upload action="http://localhost:7638/ajaxPrefix/manage/img/upload"
                                v-model:file-list="productFormData.imgs" list-type="picture-card"
                                accept="image/*" name="image" :limit="3"
                                :class="{hide_box:(productFormData.imgs.length>=3)}"
-                               :on-success="handleImgSuccess" :on-remove="handleImgRemove">
+                               :on-success="handleImgSuccess"
+                               :on-remove="handleImgRemove"
+                               :on-preview="handleImgPreview">
                         <el-icon>
                             <Plus/>
                         </el-icon>
                     </el-upload>
                 </el-col>
             </el-form-item>
+            <el-form-item label="商品详情" label-width="80px">
+                <el-col :span="20">
+                    <Editor api-key="4515omdv5d7e77zr7j0d7jmvinghrt82ccsj9491qtgnjpe2"
+                            :init="{plugins: 'lists link image table code help wordcount'}"
+                            v-model="productFormData.detail"/>
+                </el-col>
+            </el-form-item>
+            <el-form-item label="" label-width="80px">
+                <el-button type="primary" @click="handleSubmitForm"
+                           class="submit-btn">
+                    提交
+                </el-button>
+            </el-form-item>
         </el-form>
+        <el-dialog v-model="dialogVisible" title="图片预览">
+            <img :src="dialogImgUrl" alt=""/>
+        </el-dialog>
     </el-card>
 </template>
 
@@ -60,9 +77,11 @@ import {computed, onMounted, reactive, ref} from "vue";
 import type {FormInstance, FormRules} from "element-plus";
 import {Back, Plus} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
+import Editor from "@tinymce/tinymce-vue";
 
 import {useSelectedProductStore} from "@/stores/SelectedProduct";
 import ajaxMtd from "@/utils/ajax";
+import router from "@/router";
 
 const selectedProductStore = useSelectedProductStore();//存储商品信息的store对象
 const productFormRef = ref<FormInstance>();//表单ref引用对象
@@ -84,6 +103,8 @@ const formRules = reactive<FormRules>({
     categories: [{required: true, message: '商品分类必须输入'}],
 });
 let cascaderOptions = reactive([]);//商品分类级联选择器的选项数组
+const dialogVisible = ref<boolean>(false);//图片预览弹窗是否可见
+const dialogImgUrl = ref<string>('');//图片预览弹窗中的url
 
 //计算属性，根据是否有商品信息来确定页面标题、当前功能
 const currentFunc = computed(() => selectedProductStore.targetProduct._id === '' ? 'add' : 'update');
@@ -130,20 +151,16 @@ function initCascaderOptions(categories: any[], parentId: string) {
     }
 }
 
-function handleCascaderChange() {
-}
-
 function handleImgSuccess(file) {
     if (file.status === 0) {
         //upload组件默认会将本地文件信息对象向绑定的file-list数组中存入一份，
         //若此处直接将file.data push进去，会导致同一张图片在照片墙中显示两次
         //所以需要用后端返回的文件信息对象替换掉本地文件信息对象
-        productFormData.imgs.splice(productFormData.imgs.length - 1, 1, file.data);
+        setTimeout(() => productFormData.imgs.splice(productFormData.imgs.length - 1, 1, file.data));
     }
 }
 
 async function handleImgRemove(file) {
-    console.log('----------img remove', file);
     if (file.status === 'success') {
         const response: any = await ajaxMtd('/manage/img/delete', {name: file.name}, 'POST');
         if (response.status === 0) {
@@ -156,8 +173,55 @@ async function handleImgRemove(file) {
     }
 }
 
-function handleBackToHome() {
+function handleImgPreview(img) {
+    dialogVisible.value = true;
+    dialogImgUrl.value = img.url;
+}
 
+function handleSubmitForm() {
+    productFormRef.value?.validate(async validate => {
+        if (!validate) return;
+
+        const reqData: any = {//组装请求数据
+            name: productFormData.name,
+            desc: productFormData.desc,
+            price: productFormData.price,
+            detail: productFormData.detail,
+            pCategoryId: productFormData.categories.length === 1 ?
+                '0' : productFormData.categories[0],
+            categoryId: productFormData.categories.length === 1 ?
+                productFormData.categories[0] : productFormData.categories[1],
+            imgs: productFormData.imgs.map(item => item.name),
+        };
+        if (currentFunc.value === 'update') {//若为修改，则还需要商品id
+            reqData._id = selectedProductStore.targetProduct._id;
+        }
+        const url = `/manage/product/${currentFunc.value}`;
+        const response: any = await ajaxMtd(url, reqData, 'POST');
+        if (response.status !== 0) {
+            ElMessage.error(`${currentFunc.value === 'add' ? '新增' : '修改'}商品失败`);
+            return;
+        }
+        ElMessage.success(`${currentFunc.value === 'add' ? '新增' : '修改'}商品成功`);
+        handleBackToHome();
+    });
+}
+
+function handleBackToHome() {
+    //返回主页前清空pinia中商品数据
+    selectedProductStore.$patch({
+        targetProduct: {
+            _id: '',
+            categoryId: '',
+            pCategoryId: '',
+            name: '',
+            desc: '',
+            price: undefined,
+            detail: '',
+            imgs: []
+        }
+    });
+    router.replace('/product');
 }
 
 function validatePrice(rule: any, value: any, callback: any) {
@@ -177,6 +241,7 @@ onMounted(() => {
         productFormData.name = selectedProductStore.targetProduct.name;
         productFormData.desc = selectedProductStore.targetProduct.desc;
         productFormData.price = String(selectedProductStore.targetProduct.price);
+        productFormData.detail = selectedProductStore.targetProduct.detail;
         productFormData.categories.push(
             selectedProductStore.targetProduct.pCategoryId,
             selectedProductStore.targetProduct.categoryId,
@@ -196,5 +261,36 @@ onMounted(() => {
 //用于隐藏upload组件上传按钮
 .hide_box /deep/ .el-upload--picture-card {
   display: none;
+}
+
+.box-card {
+  height: 99%;
+  overflow-y: scroll;
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .el-button {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-size: 24px;
+      color: #1DA57A;
+      background-color: #ffffff00;
+    }
+
+    .header-title {
+      font-size: 24px;
+    }
+  }
+
+  .submit-btn {
+    font-size: 18px;
+    background-color: #1DA57A;
+    margin-top: 20px;
+    padding: 20px;
+  }
 }
 </style>
