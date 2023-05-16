@@ -8,7 +8,7 @@
                     </el-icon>
                     <span>创建角色</span>
                 </el-button>
-                <el-button type="primary" disabled>
+                <el-button type="primary" :disabled="authBtnDisabled">
                     <el-icon>
                         <Edit/>
                     </el-icon>
@@ -16,7 +16,7 @@
                 </el-button>
             </div>
         </template>
-        <el-table ref="roleTableRef" :data="roleTableData"
+        <el-table ref="roleTableRef" :data="tablePageData"
                   highlight-current-row border
                   @row-click="handleTableRowClick"
                   :row-class-name="tableRowClassName">
@@ -36,11 +36,15 @@
                 <template #default="scope">{{ timeFormatter(scope.row.auth_time) }}</template>
             </el-table-column>
         </el-table>
+        <el-pagination background layout="->, prev, pager, next, sizes"
+                       :total="roleTableData.length" :page-sizes="[5,10,20]"
+                       v-model:page-size="tablePageSize"
+                       v-model:current-page="tableCurrentPage"/>
     </el-card>
 </template>
 
 <script setup lang="ts">
-import {onMounted, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import {Edit, Plus} from "@element-plus/icons-vue";
 import {ElMessage, ElTable} from "element-plus";
 
@@ -51,6 +55,19 @@ const roleTableRef = ref<InstanceType<typeof ElTable>>();
 const roleTableData = reactive([]);
 const selectedRowIndex = ref<string>('');//表格被选中行的索引
 let selectedRowData = reactive({});//表格被选中行的数据
+const authBtnDisabled = ref<boolean>(true);//设置权限按钮是否禁用
+const tablePageSize = ref<number>(5);//表格分页大小
+const tableCurrentPage = ref<number>(1);//表格当前页码
+
+//计算属性，根据表格页码和分页大小，从roleTableData中获取对应子数组返回
+let tablePageData = computed(() => {
+    const startIndex = tablePageSize.value * (tableCurrentPage.value - 1);
+    const endIndex = Math.min(
+        tablePageSize.value * tableCurrentPage.value,
+        roleTableData.length
+    );
+    return roleTableData.slice(startIndex, endIndex);
+});
 
 async function reqRoleData() {
     const response: any = await ajaxMtd('/manage/role/list');
@@ -59,6 +76,7 @@ async function reqRoleData() {
         return;
     }
     ElMessage.success('查询角色信息成功');
+    console.log('----------response.data', response.data);
     roleTableData.length = 0;
     roleTableData.push(...response.data);
 }
@@ -71,11 +89,13 @@ function handleTableRowClick(row) {
         //清空选中行的索引和数据
         selectedRowIndex.value = '';
         selectedRowData = {};
+        authBtnDisabled.value = true;//禁用设置权限按钮
     } else {
         roleTableRef.value.setCurrentRow(row);//选中当前行
         //记录当前行的索引和数据
         selectedRowIndex.value = row.index;
         selectedRowData = row;
+        authBtnDisabled.value = false;//启用设置权限按钮
     }
 }
 
@@ -99,6 +119,10 @@ onMounted(() => {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+  }
+
+  .el-pagination {
+    margin-top: 20px;
   }
 }
 </style>
