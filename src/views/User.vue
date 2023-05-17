@@ -24,7 +24,7 @@
             <el-table-column label="操作" align="center">
                 <template #default="scope">
                     <el-button type="primary" @click="handleUpdateUser(scope.row)">修改</el-button>
-                    <el-button type="primary">删除</el-button>
+                    <el-button type="primary" @click="handleDeleteUser(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import {computed, onMounted, reactive, ref} from "vue";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {Plus} from "@element-plus/icons-vue";
 import type {FormInstance} from "element-plus";
 
@@ -216,6 +216,25 @@ function handleCloseDialog() {
         email: '',
         role_id: '',
     };
+}
+
+function handleDeleteUser(row) {
+    //询问是否确认删除
+    ElMessageBox.confirm(`是否确认删除用户${row.username}？`, 'warning', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(async () => {//点击确定的回调
+        const response: any = await ajaxMtd('/manage/user/delete', {userId: row._id}, 'POST');
+        if (response.status !== 0) {
+            ElMessage.error(response.msg);
+            return;
+        }
+        ElMessage.success('删除用户成功');
+        reqUserData();//重新请求数据
+    }).catch(() => {//点击取消的回调
+        ElMessage.info('取消删除');
+    });
 }
 
 function userRoleFormatter(row) {
