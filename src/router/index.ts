@@ -49,6 +49,11 @@ const router = createRouter({
                 {
                     path: '/category', component: () => import('../views/Category.vue'),
                     beforeEnter: (to, from, next) => {
+                        const curUserStore: any = useCurrentUserStore();
+                        if (!curUserStore.curUser.role.menus.includes('/category')) {
+                            next('/home');
+                            return;
+                        }
                         const curMenuStore = useCurMenuStore();
                         curMenuStore.setCurMenuName('品类管理');
                         curMenuStore.setCurMenuIndex('2-1');
@@ -58,6 +63,11 @@ const router = createRouter({
                 {
                     path: '/product', component: () => import('../views/product/Product.vue'),
                     beforeEnter: (to, from, next) => {
+                        const curUserStore: any = useCurrentUserStore();
+                        if (!curUserStore.curUser.role.menus.includes('/product')) {
+                            next('/home');
+                            return;
+                        }
                         const curMenuStore = useCurMenuStore();
                         curMenuStore.setCurMenuName('商品管理');
                         curMenuStore.setCurMenuIndex('2-2');
@@ -72,6 +82,11 @@ const router = createRouter({
                 {
                     path: '/role', component: () => import('../views/Role.vue'),
                     beforeEnter: (to, from, next) => {
+                        const curUserStore: any = useCurrentUserStore();
+                        if (!curUserStore.curUser.role.menus.includes('/role')) {
+                            next('/home');
+                            return;
+                        }
                         const curMenuStore = useCurMenuStore();
                         curMenuStore.setCurMenuName('角色管理');
                         curMenuStore.setCurMenuIndex('3');
@@ -81,6 +96,11 @@ const router = createRouter({
                 {
                     path: '/user', component: () => import('../views/User.vue'),
                     beforeEnter: (to, from, next) => {
+                        const curUserStore: any = useCurrentUserStore();
+                        if (!curUserStore.curUser.role.menus.includes('/user')) {
+                            next('/home');
+                            return;
+                        }
                         const curMenuStore = useCurMenuStore();
                         curMenuStore.setCurMenuName('用户管理');
                         curMenuStore.setCurMenuIndex('4');
