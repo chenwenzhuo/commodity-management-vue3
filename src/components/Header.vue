@@ -6,7 +6,7 @@
                     width="200"
                     confirm-button-text="确定"
                     cancel-button-text="取消"
-                    confirm-button-type="success"
+                    confirm-button-type="primary"
                     title="是否确认退出登陆？"
                     :icon="QuestionFilled"
                     @confirm="logout"
