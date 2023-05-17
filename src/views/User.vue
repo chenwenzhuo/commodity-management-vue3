@@ -11,7 +11,7 @@
             </div>
         </template>
         <!--用户数据表格-->
-        <el-table :data="userTableData" border>
+        <el-table :data="tablePageData" border>
             <el-table-column prop="username" label="用户名" align="center"/>
             <el-table-column prop="email" label="邮箱" align="center"/>
             <el-table-column prop="phone" label="电话" align="center"/>
@@ -28,6 +28,10 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination background layout="->, prev, pager, next, sizes"
+                       :total="userTableData.length" :page-sizes="[5,10,20]"
+                       v-model:page-size="tablePageSize"
+                       v-model:current-page="tableCurrentPage"/>
         <!--创建、修改用户弹窗-->
         <el-dialog :model-value="dialogDisplayStatus" width="500"
                    :title="dialogTitle" @close="handleCloseDialog">
@@ -81,6 +85,8 @@ interface UserDataInterface {
 }
 
 const userTableData = reactive([]);//用户表格数据
+const tablePageSize = ref<number>(5);//表格分页大小
+const tableCurrentPage = ref<number>(1);//表格当前页码
 const roleData = reactive([]);//角色数据
 const dialogDisplayStatus = ref<boolean>(false);//是否展示编辑用户弹窗
 const dialogType = ref<string>('');//弹窗类型
@@ -118,6 +124,15 @@ let dialogTitle = computed(() => {
     if (dialogType.value === 'create') return '创建用户';
     if (dialogType.value === 'update') return '修改用户';
     return '';
+});
+//计算属性，根据表格页码和分页大小，从roleTableData中获取对应子数组返回
+let tablePageData = computed(() => {
+    const startIndex = tablePageSize.value * (tableCurrentPage.value - 1);
+    const endIndex = Math.min(
+        tablePageSize.value * tableCurrentPage.value,
+        userTableData.length
+    );
+    return userTableData.slice(startIndex, endIndex);
 });
 
 async function reqUserData() {
@@ -208,14 +223,12 @@ function handleCloseDialog() {
     dialogDisplayStatus.value = false;//关闭弹窗
     dialogType.value = '';//清除弹窗类型
     //清除数据对象
-    modifyUserFormData = {
-        _id: '',
-        username: '',
-        password: '',
-        phone: '',
-        email: '',
-        role_id: '',
-    };
+    modifyUserFormData._id = '';
+    modifyUserFormData.username = '';
+    modifyUserFormData.password = '';
+    modifyUserFormData.phone = '';
+    modifyUserFormData.email = '';
+    modifyUserFormData.role_id = '';
 }
 
 function handleDeleteUser(row) {
@@ -270,6 +283,10 @@ onMounted(() => {
         margin-right: 10px;
       }
     }
+  }
+
+  .el-pagination {
+    margin-top: 15px;
   }
 }
 </style>
