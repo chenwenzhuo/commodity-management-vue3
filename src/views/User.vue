@@ -72,6 +72,7 @@ import ajaxMtd from "@/utils/ajax";
 import {timeFormatter} from "@/utils/tools";
 
 interface UserDataInterface {
+    _id?: string,
     username: string,
     password?: string,
     phone: string,
@@ -85,6 +86,7 @@ const dialogDisplayStatus = ref<boolean>(false);//是否展示编辑用户弹窗
 const dialogType = ref<string>('');//弹窗类型
 const modifyUserFormRef = ref<FormInstance>();//编辑用户表单引用
 let modifyUserFormData = reactive<UserDataInterface>({//编辑用户表单数据
+    _id: '',
     username: '',
     password: '',
     phone: '',
@@ -168,17 +170,25 @@ function handleUpdateUser(row?: any) {
         dialogType.value = 'update';//设置弹窗类型
         modifyUserFormRef.value?.clearValidate();//清除表单校验结果
         dialogDisplayStatus.value = true;//打开弹窗
-        modifyUserFormData = {//修改时将用户当前数据填入作为默认值
+        /*modifyUserFormData = {
             username: row.username,
             phone: row.phone,
             email: row.email,
             role_id: row.role_id,
-        }
+        }*/
+        //修改时将用户当前数据填入作为默认值，
+        //不能用以上注释中的方式赋值，否则会造成表单无法输入
+        modifyUserFormData._id = row._id;
+        modifyUserFormData.username = row.username;
+        modifyUserFormData.phone = row.phone;
+        modifyUserFormData.email = row.email;
+        modifyUserFormData.role_id = row.role_id;
         return;
     }
     modifyUserFormRef.value?.validate(async valid => {
         if (!valid) return;
         const response: any = await ajaxMtd('/manage/user/update', {
+            _id: modifyUserFormData._id,
             username: modifyUserFormData.username,
             phone: modifyUserFormData.phone,
             email: modifyUserFormData.email,
@@ -199,6 +209,7 @@ function handleCloseDialog() {
     dialogType.value = '';//清除弹窗类型
     //清除数据对象
     modifyUserFormData = {
+        _id: '',
         username: '',
         password: '',
         phone: '',
