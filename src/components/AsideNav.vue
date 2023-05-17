@@ -60,7 +60,6 @@ import router from "@/router";
 let curActiveMenuIndex = '1';
 
 function onSelectMenu(index: string): void {
-    console.log('----------------menu index', index);
     if (index === curActiveMenuIndex)
         return;
     curActiveMenuIndex = index;

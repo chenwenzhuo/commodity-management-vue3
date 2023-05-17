@@ -137,7 +137,6 @@ async function reqRoleData() {
         return;
     }
     ElMessage.success('查询角色信息成功');
-    console.log('----------response.data', response.data);
     roleTableData.length = 0;
     roleTableData.push(...response.data);
 }
