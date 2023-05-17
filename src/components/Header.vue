@@ -42,10 +42,12 @@ function logout(): void {
         curUser: {
             _id: '',
             username: '',
+            password: '',
             phone: '',
             email: '',
             create_time: 0,
             role_id: '',
+            role: {}
         }
     });
     curMenuStore.setCurMenuName('');//清楚菜单数据
